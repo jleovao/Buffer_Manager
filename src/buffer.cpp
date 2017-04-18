@@ -38,13 +38,55 @@ BufMgr::BufMgr(std::uint32_t bufs)
 BufMgr::~BufMgr() {
 }
 
+// Advance clock to next frame in the buffer pool
 void BufMgr::advanceClock()
 {
-
+    clockHand = (clockHand+1) % bufs;    
 }
 
 void BufMgr::allocBuf(FrameId & frame) 
 {
+    bool pageFound = false;
+
+    try {
+    while(!pageFound) {
+        advanceClock();
+        // check if valid is set
+        if(frame->valid) {
+           // if valid check refbit
+           if(frame->refbit) {
+               frame->refbit = 0;
+               continue;
+           }
+           else {
+               // check if page is pinned
+               if(frame->pinCnt > 0) {
+                   numPinned++;
+                   continue;
+               }
+               else {
+                   // Check if dirty bit is set
+                   if(frame->dirty) {
+                       FlushFile(File * fileptr);
+                       frame->Set(File * fileptr, PageID pageNum);
+                       pageFound = true;
+                   }
+                   else {
+                       frame->Set(File * fileptr, PageID pageNum);
+                       pageFound = true;
+                   } 
+               }
+           }
+        }
+        // Valid not set
+        else {
+            frame->Set(File * filePtr, PageID pageNum);   
+            pageFound = true;
+        }
+    }
+    catch(buffer_exceeded_exception e) {
+       
+    }
 }
 
 	
