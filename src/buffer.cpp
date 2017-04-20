@@ -41,38 +41,42 @@ BufMgr::~BufMgr() {
 // Advance clock to next frame in the buffer pool
 void BufMgr::advanceClock()
 {
-    clockHand = (clockHand+1) % bufs;    
+    clockHand = (clockHand+1) % numBufs;    
 }
 
 void BufMgr::allocBuf(FrameId & frame) 
 {
     bool pageFound = false;
-
+    std::uint32_t numPinned = 0;
+   
     try {
     while(!pageFound) {
+        // Advance the clock to next frame
         advanceClock();
+
         // check if valid is set
-        if(frame->valid) {
-           // if valid check refbit
-           if(frame->refbit) {
-               frame->refbit = 0;
+        if(bufDescTable[clockHand].valid) {
+           // if valid check refbit and see if was recently referenced.
+           if(bufDescTable[clockHand].refbit) {
+               // Reset refbit
+               bufDescTable[clockHand].refbit = 0;
                continue;
            }
            else {
                // check if page is pinned
-               if(frame->pinCnt > 0) {
+               if(bufDescTable[clockHand].pinCnt > 0) {
                    numPinned++;
                    continue;
                }
                else {
                    // Check if dirty bit is set
-                   if(frame->dirty) {
-                       FlushFile(File * fileptr);
-                       frame->Set(File * fileptr, PageID pageNum);
+                   if(bufDescTable[clockHand].dirty) {
+                       //FlushFile(File * fileptr);
+                       //frame->Set(File * fileptr, PageID pageNum);
                        pageFound = true;
                    }
                    else {
-                       frame->Set(File * fileptr, PageID pageNum);
+                       //frame->Set(File * fileptr, PageID pageNum);
                        pageFound = true;
                    } 
                }
@@ -80,7 +84,7 @@ void BufMgr::allocBuf(FrameId & frame)
         }
         // Valid not set
         else {
-            frame->Set(File * filePtr, PageID pageNum);   
+            //frame->Set(File * filePtr, PageID pageNum);   
             pageFound = true;
         }
     }
