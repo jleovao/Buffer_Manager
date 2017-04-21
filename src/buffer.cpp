@@ -99,38 +99,100 @@ void BufMgr::allocBuf(FrameId & frame)
 	
 void BufMgr::readPage(File* file, const PageId pageNo, Page*& page)
 {
-        
-    //try{
-        // First check whether the page is already in the buffer pool    
-        FrameId frameNo;
-        hashTable->lookup(file, pageNo, frameNo);
-        // Set the appropriate refbit
-        bufDescTable[frameNo].refbit = true;
-        //Increment pin count for the page
-        bufDescTable[frameNo].pinCount++;
-        // return pointer to the frame containing the page via page param
-        
-    //} catch(hash_not_found_exception e) {
-        // If page is not in the buffer pool
-        // Call allocBuf(frameNo);
-        // call file->readPage(pageNo)
-        // insert page into hashtable: insert->();
-        // invoke Set() on the frame to set it up properly
-        // Return a pointer to the frame containing the page via page param
-    //}
+  // First check whether the page is already in the buffer pool
+  // are we suppose to get frameNo from clockHand index?
+  FrameId tmp = bufDescTable[clockHand].frameNo;
+  try{
+   hashTable->lookup(file, pageNo, tmp);
+  }
+
+  catch(HashNotFoundException e){
+  // Case 1: If page is not in the buffer pool
+  //Allocate buffer frame
+  BufMgr::allocBuf(tmp);
+
+  //Read page 
+  file->readPage(pageNo);
+
+  //Insert page into hashtab;e
+  hashTable->insert(file,pageNo,tmp);
+
+  // invoke Set() on the frame to set it up properly
+  bufDescTable[clockHand].Set(file,pageNo);
+  // Return a pointer to the frame containing the page via page param
+  page = &bufPool[clockHand];
+  }
+
+  // Case 2: Page is in the buffer pool
+  // Set the appropriate refbit
+  bufDescTable[clockHand].refbit = true;
+  //Increment pin count for the page
+  bufDescTable[clockHand].pinCnt++;
+  // return pointer to the frame containing the page via page param
+  page = &bufPool[clockHand];
 }
 
 
-void BufMgr::unPinPage(File* file, const PageId pageNo, const bool dirty) 
+void BufMgr::unPinPage(File* file, const PageId pageNo, const bool dirty)
 {
+  //Is this necessary?
+  FrameId tmp = bufDescTable[clockHand].frameNo;
+
+  try{
+   //Lookup file and page number
+   hashTable->lookup(file, pageNo, bufDescTable[clockHand].frameNo);
+   //Decrement pin count
+
+   if(bufDescTable[clockHand].pinCnt == 0){
+     throw PageNotPinnedException("PinCnt already 0",pageNo,tmp);
+   }
+
+   bufDescTable[clockHand].pinCnt--; //do we need to lookup? Are we decrementing the right pinCnt?
+
+   if(bufDescTable[clockHand].dirty == true){
+    //are we checking if the param dirty == false or if bufDesc.dirty == false?
+    //Which dirty are we updating and to what value?
+    bufDescTable[clockHand].dirty = false;
+   }
+  }
+
+  catch(PageNotPinnedException e){}
+  catch(HashNotFoundException e){}
 }
 
 void BufMgr::flushFile(const File* file) 
 {
+  //Scan bufPool coorect way to scan bufPool?
+  for(unsigned int i = 0; i < numBufs; i++){
+  try{
+  //checks if page corresponds to file
+  if(bufDescTable[i].file == file){
+   //Checks if dirty bit is true
+   if (bufDescTable[i].dirty == true){
+    //Flush page to disk
+    //file->writePage(bufPool[0]); how to get this to work?
+
+    //Reset dirty bit
+    bufDescTable[i].dirty = false;
+   }
+
+    //Remove page from hashtable
+    hashTable->remove(file,bufDescTable[i].pageNo);
+
+    //Invoke clear() to clear page frame
+    bufDescTable[i].Clear();
+
+  }
+  //else{continue;}
+ }
+  catch(BadBufferException e){}
+  catch(PagePinnedException e){}
+  }
 }
 
 void BufMgr::allocPage(File* file, PageId &pageNo, Page*& page) 
 {
+  //Testing
 }
 
 void BufMgr::disposePage(File* file, const PageId PageNo)

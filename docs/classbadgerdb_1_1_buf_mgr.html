@@ -179,10 +179,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00064">64</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00164">164</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
 
-<p><div class="fragment"><pre class="fragment"><a name="l00065"></a>00065 {
-<a name="l00066"></a>00066 }
+<p><div class="fragment"><pre class="fragment"><a name="l00165"></a>00165 {
+<a name="l00166"></a>00166   <span class="comment">//Testing</span>
+<a name="l00167"></a>00167 }
 </pre></div></p>
 
 </div>
@@ -245,11 +246,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00068">68</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00169">169</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
 
-<p><div class="fragment"><pre class="fragment"><a name="l00069"></a>00069 {
-<a name="l00070"></a>00070     
-<a name="l00071"></a>00071 }
+<p><div class="fragment"><pre class="fragment"><a name="l00170"></a>00170 {
+<a name="l00171"></a>00171     
+<a name="l00172"></a>00172 }
 </pre></div></p>
 
 </div>
@@ -284,10 +285,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00060">60</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00134">134</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
 
-<p><div class="fragment"><pre class="fragment"><a name="l00061"></a>00061 {
-<a name="l00062"></a>00062 }
+<p><div class="fragment"><pre class="fragment"><a name="l00135"></a>00135 {
+<a name="l00136"></a>00136   <span class="comment">//Scan bufPool coorect way to scan bufPool?</span>
+<a name="l00137"></a>00137   <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; numBufs; i++){
+<a name="l00138"></a>00138   <span class="keywordflow">try</span>{
+<a name="l00139"></a>00139   <span class="comment">//checks if page corresponds to file</span>
+<a name="l00140"></a>00140   <span class="keywordflow">if</span>(bufDescTable[i].file == file){
+<a name="l00141"></a>00141    <span class="comment">//Checks if dirty bit is true</span>
+<a name="l00142"></a>00142    <span class="keywordflow">if</span> (bufDescTable[i].dirty == <span class="keyword">true</span>){
+<a name="l00143"></a>00143     <span class="comment">//Flush page to disk</span>
+<a name="l00144"></a>00144     <span class="comment">//file-&gt;writePage(bufPool[0]); how to get this to work?</span>
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146     <span class="comment">//Reset dirty bit</span>
+<a name="l00147"></a>00147     bufDescTable[i].dirty = <span class="keyword">false</span>;
+<a name="l00148"></a>00148    }
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150     <span class="comment">//Remove page from hashtable</span>
+<a name="l00151"></a>00151     hashTable-&gt;remove(file,bufDescTable[i].pageNo);
+<a name="l00152"></a>00152 
+<a name="l00153"></a>00153     <span class="comment">//Invoke clear() to clear page frame</span>
+<a name="l00154"></a>00154     bufDescTable[i].Clear();
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156   }
+<a name="l00157"></a>00157   <span class="comment">//else{continue;}</span>
+<a name="l00158"></a>00158  }
+<a name="l00159"></a>00159   <span class="keywordflow">catch</span>(BadBufferException e){}
+<a name="l00160"></a>00160   <span class="keywordflow">catch</span>(PagePinnedException e){}
+<a name="l00161"></a>00161   }
+<a name="l00162"></a>00162 }
 </pre></div></p>
 
 </div>
@@ -334,24 +361,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="memdoc">
 <p>Print member variable values. </p>
 
-<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00073">73</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00174">174</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
 
-<p><div class="fragment"><pre class="fragment"><a name="l00074"></a>00074 {
-<a name="l00075"></a>00075   BufDesc* tmpbuf;
-<a name="l00076"></a>00076   <span class="keywordtype">int</span> validFrames = 0;
-<a name="l00077"></a>00077   
-<a name="l00078"></a>00078   <span class="keywordflow">for</span> (std::uint32_t i = 0; i &lt; numBufs; i++)
-<a name="l00079"></a>00079   {
-<a name="l00080"></a>00080     tmpbuf = &amp;(bufDescTable[i]);
-<a name="l00081"></a>00081     std::cout &lt;&lt; <span class="stringliteral">&quot;FrameNo:&quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;
-<a name="l00082"></a>00082     tmpbuf-&gt;Print();
-<a name="l00083"></a>00083 
-<a name="l00084"></a>00084     <span class="keywordflow">if</span> (tmpbuf-&gt;valid == <span class="keyword">true</span>)
-<a name="l00085"></a>00085       validFrames++;
-<a name="l00086"></a>00086   }
-<a name="l00087"></a>00087 
-<a name="l00088"></a>00088   std::cout &lt;&lt; <span class="stringliteral">&quot;Total Number of Valid Frames:&quot;</span> &lt;&lt; validFrames &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-<a name="l00089"></a>00089 }
+<p><div class="fragment"><pre class="fragment"><a name="l00175"></a>00175 {
+<a name="l00176"></a>00176   BufDesc* tmpbuf;
+<a name="l00177"></a>00177   <span class="keywordtype">int</span> validFrames = 0;
+<a name="l00178"></a>00178   
+<a name="l00179"></a>00179   <span class="keywordflow">for</span> (std::uint32_t i = 0; i &lt; numBufs; i++)
+<a name="l00180"></a>00180   {
+<a name="l00181"></a>00181     tmpbuf = &amp;(bufDescTable[i]);
+<a name="l00182"></a>00182     std::cout &lt;&lt; <span class="stringliteral">&quot;FrameNo:&quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;
+<a name="l00183"></a>00183     tmpbuf-&gt;Print();
+<a name="l00184"></a>00184 
+<a name="l00185"></a>00185     <span class="keywordflow">if</span> (tmpbuf-&gt;valid == <span class="keyword">true</span>)
+<a name="l00186"></a>00186       validFrames++;
+<a name="l00187"></a>00187   }
+<a name="l00188"></a>00188 
+<a name="l00189"></a>00189   std::cout &lt;&lt; <span class="stringliteral">&quot;Total Number of Valid Frames:&quot;</span> &lt;&lt; validFrames &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+<a name="l00190"></a>00190 }
 </pre></div></p>
 
 </div>
@@ -396,10 +423,35 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00051">51</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00100">100</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
 
-<p><div class="fragment"><pre class="fragment"><a name="l00052"></a>00052 {
-<a name="l00053"></a>00053 }
+<p><div class="fragment"><pre class="fragment"><a name="l00101"></a>00101 {
+<a name="l00102"></a>00102         
+<a name="l00103"></a>00103     <span class="comment">//try{</span>
+<a name="l00104"></a>00104         <span class="comment">// First check whether the page is already in the buffer pool</span>
+<a name="l00105"></a>00105         <a class="code" href="namespacebadgerdb.html#a1e7378fbefaea050a47e6cde929e9c01" title="Identifier for a frame in buffer pool.">FrameId</a> tmp = bufDescTable[clockHand].frameNo;
+<a name="l00106"></a>00106         <span class="keywordflow">try</span>{
+<a name="l00107"></a>00107         hashTable-&gt;lookup(file, pageNo, tmp);
+<a name="l00108"></a>00108         }
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110         <span class="keywordflow">catch</span>(HashNotFoundException e){
+<a name="l00111"></a>00111         <span class="comment">// Case 1: If page is not in the buffer pool</span>
+<a name="l00112"></a>00112           BufMgr::allocBuf(tmp);
+<a name="l00113"></a>00113           file-&gt;readPage(pageNo);
+<a name="l00114"></a>00114         <span class="comment">// insert page into hashtable: insert-&gt;();</span>
+<a name="l00115"></a>00115         <span class="comment">// invoke Set() on the frame to set it up properly</span>
+<a name="l00116"></a>00116         <span class="comment">// Return a pointer to the frame containing the page via page param</span>
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118         }
+<a name="l00119"></a>00119 
+<a name="l00120"></a>00120         <span class="comment">// Case 2: Page is in the buffer pool</span>
+<a name="l00121"></a>00121         <span class="comment">// Set the appropriate refbit</span>
+<a name="l00122"></a>00122         bufDescTable[clockHand].refbit = <span class="keyword">true</span>;
+<a name="l00123"></a>00123         <span class="comment">//Increment pin count for the page</span>
+<a name="l00124"></a>00124         bufDescTable[clockHand].pinCnt++;
+<a name="l00125"></a>00125         <span class="comment">// return pointer to the frame containing the page via page param</span>
+<a name="l00126"></a>00126         page = &amp;<a class="code" href="classbadgerdb_1_1_buf_mgr.html#aa498047fc351652d0bc7eabf6cb62ab0">bufPool</a>[clockHand];
+<a name="l00127"></a>00127 }
 </pre></div></p>
 
 </div>
@@ -450,10 +502,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00056">56</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
+<p>Definition at line <a class="el" href="buffer_8cpp_source.html#l00130">130</a> of file <a class="el" href="buffer_8cpp_source.html">buffer.cpp</a>.</p>
 
-<p><div class="fragment"><pre class="fragment"><a name="l00057"></a>00057 {
-<a name="l00058"></a>00058 }
+<p><div class="fragment"><pre class="fragment"><a name="l00131"></a>00131 {
+<a name="l00132"></a>00132 }
 </pre></div></p>
 
 </div>
@@ -476,8 +528,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/linux/ieng6/oce/37/jleovao/Desktop/cse190D/BufMgr/src/<a class="el" href="buffer_8h_source.html">buffer.h</a></li>
-<li>/home/linux/ieng6/oce/37/jleovao/Desktop/cse190D/BufMgr/src/<a class="el" href="buffer_8cpp_source.html">buffer.cpp</a></li>
+<li>/home/linux/ieng6/oce/2d/amquinte/CSE190D/src/<a class="el" href="buffer_8h_source.html">buffer.h</a></li>
+<li>/home/linux/ieng6/oce/2d/amquinte/CSE190D/src/<a class="el" href="buffer_8cpp_source.html">buffer.cpp</a></li>
 </ul>
 </div>
 <!--- window showing the filter options -->
@@ -494,7 +546,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generated on 10 Apr 2017 for BadgerDB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Apr 2017 for BadgerDB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>BadgerDB: /home/linux/ieng6/oce/37/jleovao/Desktop/cse190D/BufMgr/src/buffer.cpp Source File</title>
+<title>BadgerDB: /home/linux/ieng6/oce/2d/amquinte/CSE190D/src/buffer.cpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javaScript" src="search/search.js"></script>
@@ -41,7 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="files.html"><span>File&nbsp;List</span></a></li>
     </ul>
   </div>
-<h1>/home/linux/ieng6/oce/37/jleovao/Desktop/cse190D/BufMgr/src/buffer.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 
+<h1>/home/linux/ieng6/oce/2d/amquinte/CSE190D/src/buffer.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 
 <a name="l00008"></a>00008 <span class="preprocessor">#include &lt;memory&gt;</span>
 <a name="l00009"></a>00009 <span class="preprocessor">#include &lt;iostream&gt;</span>
 <a name="l00010"></a>00010 <span class="preprocessor">#include &quot;buffer.h&quot;</span>
@@ -75,57 +75,158 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00038"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#aab08001e1be18bfbd4af9113e91cf953">00038</a> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#aab08001e1be18bfbd4af9113e91cf953">BufMgr::~BufMgr</a>() {
 <a name="l00039"></a>00039 }
 <a name="l00040"></a>00040 
-<a name="l00041"></a>00041 <span class="keywordtype">void</span> BufMgr::advanceClock()
-<a name="l00042"></a>00042 {
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044 }
-<a name="l00045"></a>00045 
-<a name="l00046"></a>00046 <span class="keywordtype">void</span> BufMgr::allocBuf(<a class="code" href="namespacebadgerdb.html#a1e7378fbefaea050a47e6cde929e9c01" title="Identifier for a frame in buffer pool.">FrameId</a> &amp; frame) 
-<a name="l00047"></a>00047 {
-<a name="l00048"></a>00048 }
-<a name="l00049"></a>00049 
-<a name="l00050"></a>00050   
-<a name="l00051"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#a9f853f0f1d4628e7e14374d0c7c6a4f3">00051</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#a9f853f0f1d4628e7e14374d0c7c6a4f3">BufMgr::readPage</a>(<a class="code" href="classbadgerdb_1_1_file.html" title="Class which represents a file in the filesystem containing database pages.">File</a>* file, <span class="keyword">const</span> <a class="code" href="namespacebadgerdb.html#a1f49e404293bf4240756b89b53b1587a" title="Identifier for a page in a file.">PageId</a> pageNo, <a class="code" href="classbadgerdb_1_1_page.html" title="Class which represents a fixed-size database page containing records.">Page</a>*&amp; page)
-<a name="l00052"></a>00052 {
-<a name="l00053"></a>00053 }
-<a name="l00054"></a>00054 
-<a name="l00055"></a>00055 
-<a name="l00056"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#aa9bdf04c8543f59744db22efa9420c89">00056</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#aa9bdf04c8543f59744db22efa9420c89">BufMgr::unPinPage</a>(<a class="code" href="classbadgerdb_1_1_file.html" title="Class which represents a file in the filesystem containing database pages.">File</a>* file, <span class="keyword">const</span> <a class="code" href="namespacebadgerdb.html#a1f49e404293bf4240756b89b53b1587a" title="Identifier for a page in a file.">PageId</a> pageNo, <span class="keyword">const</span> <span class="keywordtype">bool</span> dirty) 
-<a name="l00057"></a>00057 {
-<a name="l00058"></a>00058 }
-<a name="l00059"></a>00059 
-<a name="l00060"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#acc61d1985720411ebb76e70f702827d3">00060</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#acc61d1985720411ebb76e70f702827d3">BufMgr::flushFile</a>(<span class="keyword">const</span> <a class="code" href="classbadgerdb_1_1_file.html" title="Class which represents a file in the filesystem containing database pages.">File</a>* file) 
-<a name="l00061"></a>00061 {
-<a name="l00062"></a>00062 }
-<a name="l00063"></a>00063 
-<a name="l00064"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#ab9ae3b12aac55b119b5763e3de2a4d2b">00064</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#ab9ae3b12aac55b119b5763e3de2a4d2b">BufMgr::allocPage</a>(<a class="code" href="classbadgerdb_1_1_file.html" title="Class which represents a file in the filesystem containing database pages.">File</a>* file, <a class="code" href="namespacebadgerdb.html#a1f49e404293bf4240756b89b53b1587a" title="Identifier for a page in a file.">PageId</a> &amp;pageNo, <a class="code" href="classbadgerdb_1_1_page.html" title="Class which represents a fixed-size database page containing records.">Page</a>*&amp; page) 
-<a name="l00065"></a>00065 {
-<a name="l00066"></a>00066 }
-<a name="l00067"></a>00067 
-<a name="l00068"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#a870a80a0f0abcf3b640b913b46b64486">00068</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#a870a80a0f0abcf3b640b913b46b64486">BufMgr::disposePage</a>(<a class="code" href="classbadgerdb_1_1_file.html" title="Class which represents a file in the filesystem containing database pages.">File</a>* file, <span class="keyword">const</span> <a class="code" href="namespacebadgerdb.html#a1f49e404293bf4240756b89b53b1587a" title="Identifier for a page in a file.">PageId</a> PageNo)
-<a name="l00069"></a>00069 {
-<a name="l00070"></a>00070     
-<a name="l00071"></a>00071 }
-<a name="l00072"></a>00072 
-<a name="l00073"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#a598b3112b8193af603f5bc97c478a671">00073</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#a598b3112b8193af603f5bc97c478a671">BufMgr::printSelf</a>(<span class="keywordtype">void</span>) 
-<a name="l00074"></a>00074 {
-<a name="l00075"></a>00075   <a class="code" href="classbadgerdb_1_1_buf_desc.html" title="Class for maintaining information about buffer pool frames.">BufDesc</a>* tmpbuf;
-<a name="l00076"></a>00076   <span class="keywordtype">int</span> validFrames = 0;
-<a name="l00077"></a>00077   
-<a name="l00078"></a>00078   <span class="keywordflow">for</span> (std::uint32_t i = 0; i &lt; numBufs; i++)
-<a name="l00079"></a>00079   {
-<a name="l00080"></a>00080     tmpbuf = &amp;(bufDescTable[i]);
-<a name="l00081"></a>00081     std::cout &lt;&lt; <span class="stringliteral">&quot;FrameNo:&quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;
-<a name="l00082"></a>00082     tmpbuf-&gt;Print();
-<a name="l00083"></a>00083 
-<a name="l00084"></a>00084     <span class="keywordflow">if</span> (tmpbuf-&gt;valid == <span class="keyword">true</span>)
-<a name="l00085"></a>00085       validFrames++;
-<a name="l00086"></a>00086   }
-<a name="l00087"></a>00087 
-<a name="l00088"></a>00088   std::cout &lt;&lt; <span class="stringliteral">&quot;Total Number of Valid Frames:&quot;</span> &lt;&lt; validFrames &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-<a name="l00089"></a>00089 }
-<a name="l00090"></a>00090 
-<a name="l00091"></a>00091 }
+<a name="l00041"></a>00041 <span class="comment">// Advance clock to next frame in the buffer pool</span>
+<a name="l00042"></a>00042 <span class="keywordtype">void</span> BufMgr::advanceClock()
+<a name="l00043"></a>00043 {
+<a name="l00044"></a>00044     clockHand = (clockHand+1) % numBufs;    
+<a name="l00045"></a>00045 }
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047 <span class="keywordtype">void</span> BufMgr::allocBuf(<a class="code" href="namespacebadgerdb.html#a1e7378fbefaea050a47e6cde929e9c01" title="Identifier for a frame in buffer pool.">FrameId</a> &amp; frame) 
+<a name="l00048"></a>00048 {
+<a name="l00049"></a>00049     <span class="keywordtype">bool</span> pageFound = <span class="keyword">false</span>;
+<a name="l00050"></a>00050     std::uint32_t numPinned = 0;
+<a name="l00051"></a>00051    
+<a name="l00052"></a>00052     <span class="comment">//try {</span>
+<a name="l00053"></a>00053         <span class="keywordflow">while</span>(!pageFound) {
+<a name="l00054"></a>00054       <span class="comment">// Advance the clock to next frame</span>
+<a name="l00055"></a>00055       advanceClock();
+<a name="l00056"></a>00056       
+<a name="l00057"></a>00057             <span class="comment">// check if valid is set</span>
+<a name="l00058"></a>00058             <span class="keywordflow">if</span>(bufDescTable[clockHand].valid) {
+<a name="l00059"></a>00059                 <span class="comment">// if valid check refbit and see if was recently referenced.</span>
+<a name="l00060"></a>00060                 <span class="keywordflow">if</span>(bufDescTable[clockHand].refbit) {
+<a name="l00061"></a>00061                     <span class="comment">// Reset refbit</span>
+<a name="l00062"></a>00062                     bufDescTable[clockHand].refbit = 0;
+<a name="l00063"></a>00063                     <span class="keywordflow">continue</span>;
+<a name="l00064"></a>00064                 }
+<a name="l00065"></a>00065                 <span class="keywordflow">else</span> {
+<a name="l00066"></a>00066                     <span class="comment">// check if page is pinned</span>
+<a name="l00067"></a>00067                   <span class="keywordflow">if</span>(bufDescTable[clockHand].pinCnt &gt; 0) {
+<a name="l00068"></a>00068                       numPinned++;
+<a name="l00069"></a>00069                       <span class="keywordflow">continue</span>;
+<a name="l00070"></a>00070                   }
+<a name="l00071"></a>00071                   <span class="keywordflow">else</span> {
+<a name="l00072"></a>00072                       <span class="comment">// Check if dirty bit is set</span>
+<a name="l00073"></a>00073                       <span class="keywordflow">if</span>(bufDescTable[clockHand].dirty) {
+<a name="l00074"></a>00074                           <span class="comment">//FlushFile(File * fileptr);</span>
+<a name="l00075"></a>00075                           <span class="comment">//bufDescTable[clockHand].Set(File * fileptr, PageID pageNum);</span>
+<a name="l00076"></a>00076                           pageFound = <span class="keyword">true</span>;
+<a name="l00077"></a>00077                       }
+<a name="l00078"></a>00078                       <span class="keywordflow">else</span> {
+<a name="l00079"></a>00079                             <span class="comment">//bufDescTable[clockHand].Set(File * fileptr, PageID pageNum);</span>
+<a name="l00080"></a>00080                           pageFound = <span class="keyword">true</span>;
+<a name="l00081"></a>00081                       } 
+<a name="l00082"></a>00082                   }
+<a name="l00083"></a>00083               }
+<a name="l00084"></a>00084           }
+<a name="l00085"></a>00085           <span class="comment">// Valid not set</span>
+<a name="l00086"></a>00086           <span class="keywordflow">else</span> {
+<a name="l00087"></a>00087               <span class="comment">//bufDescTable[clockHand].Set(File * filePtr, PageID pageNum);   </span>
+<a name="l00088"></a>00088               pageFound = <span class="keyword">true</span>;
+<a name="l00089"></a>00089           }
+<a name="l00090"></a>00090       } <span class="comment">// end while </span>
+<a name="l00091"></a>00091     <span class="comment">//if(numPinned &gt;= numBufs) {</span>
+<a name="l00092"></a>00092     <span class="comment">//    throw buffer_exceeded_exception(&quot;All buffer frames pinned!&quot;);</span>
+<a name="l00093"></a>00093     <span class="comment">//}</span>
+<a name="l00094"></a>00094     <span class="comment">//} catch(buffer_exceeded_exception e) {</span>
+<a name="l00095"></a>00095     
+<a name="l00096"></a>00096     <span class="comment">//}</span>
+<a name="l00097"></a>00097 }
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099   
+<a name="l00100"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#a9f853f0f1d4628e7e14374d0c7c6a4f3">00100</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#a9f853f0f1d4628e7e14374d0c7c6a4f3">BufMgr::readPage</a>(<a class="code" href="classbadgerdb_1_1_file.html" title="Class which represents a file in the filesystem containing database pages.">File</a>* file, <span class="keyword">const</span> <a class="code" href="namespacebadgerdb.html#a1f49e404293bf4240756b89b53b1587a" title="Identifier for a page in a file.">PageId</a> pageNo, <a class="code" href="classbadgerdb_1_1_page.html" title="Class which represents a fixed-size database page containing records.">Page</a>*&amp; page)
+<a name="l00101"></a>00101 {
+<a name="l00102"></a>00102         
+<a name="l00103"></a>00103     <span class="comment">//try{</span>
+<a name="l00104"></a>00104         <span class="comment">// First check whether the page is already in the buffer pool</span>
+<a name="l00105"></a>00105         <a class="code" href="namespacebadgerdb.html#a1e7378fbefaea050a47e6cde929e9c01" title="Identifier for a frame in buffer pool.">FrameId</a> tmp = bufDescTable[clockHand].frameNo;
+<a name="l00106"></a>00106         <span class="keywordflow">try</span>{
+<a name="l00107"></a>00107         hashTable-&gt;<a class="code" href="classbadgerdb_1_1_buf_hash_tbl.html#a23b1030dd244d0d956176a596aae0210">lookup</a>(file, pageNo, tmp);
+<a name="l00108"></a>00108         }
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110         <span class="keywordflow">catch</span>(<a class="code" href="classbadgerdb_1_1_hash_not_found_exception.html" title="An exception that is thrown when an entry being looked up in the hash table is not...">HashNotFoundException</a> e){
+<a name="l00111"></a>00111         <span class="comment">// Case 1: If page is not in the buffer pool</span>
+<a name="l00112"></a>00112           BufMgr::allocBuf(tmp);
+<a name="l00113"></a>00113           file-&gt;<a class="code" href="classbadgerdb_1_1_file.html#aba4762b533499b7b7cc0774192ead27c">readPage</a>(pageNo);
+<a name="l00114"></a>00114         <span class="comment">// insert page into hashtable: insert-&gt;();</span>
+<a name="l00115"></a>00115         <span class="comment">// invoke Set() on the frame to set it up properly</span>
+<a name="l00116"></a>00116         <span class="comment">// Return a pointer to the frame containing the page via page param</span>
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118         }
+<a name="l00119"></a>00119 
+<a name="l00120"></a>00120         <span class="comment">// Case 2: Page is in the buffer pool</span>
+<a name="l00121"></a>00121         <span class="comment">// Set the appropriate refbit</span>
+<a name="l00122"></a>00122         bufDescTable[clockHand].refbit = <span class="keyword">true</span>;
+<a name="l00123"></a>00123         <span class="comment">//Increment pin count for the page</span>
+<a name="l00124"></a>00124         bufDescTable[clockHand].pinCnt++;
+<a name="l00125"></a>00125         <span class="comment">// return pointer to the frame containing the page via page param</span>
+<a name="l00126"></a>00126         page = &amp;<a class="code" href="classbadgerdb_1_1_buf_mgr.html#aa498047fc351652d0bc7eabf6cb62ab0">bufPool</a>[clockHand];
+<a name="l00127"></a>00127 }
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129 
+<a name="l00130"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#aa9bdf04c8543f59744db22efa9420c89">00130</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#aa9bdf04c8543f59744db22efa9420c89">BufMgr::unPinPage</a>(<a class="code" href="classbadgerdb_1_1_file.html" title="Class which represents a file in the filesystem containing database pages.">File</a>* file, <span class="keyword">const</span> <a class="code" href="namespacebadgerdb.html#a1f49e404293bf4240756b89b53b1587a" title="Identifier for a page in a file.">PageId</a> pageNo, <span class="keyword">const</span> <span class="keywordtype">bool</span> dirty) 
+<a name="l00131"></a>00131 {
+<a name="l00132"></a>00132 }
+<a name="l00133"></a>00133 
+<a name="l00134"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#acc61d1985720411ebb76e70f702827d3">00134</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#acc61d1985720411ebb76e70f702827d3">BufMgr::flushFile</a>(<span class="keyword">const</span> <a class="code" href="classbadgerdb_1_1_file.html" title="Class which represents a file in the filesystem containing database pages.">File</a>* file) 
+<a name="l00135"></a>00135 {
+<a name="l00136"></a>00136   <span class="comment">//Scan bufPool coorect way to scan bufPool?</span>
+<a name="l00137"></a>00137   <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; numBufs; i++){
+<a name="l00138"></a>00138   <span class="keywordflow">try</span>{
+<a name="l00139"></a>00139   <span class="comment">//checks if page corresponds to file</span>
+<a name="l00140"></a>00140   <span class="keywordflow">if</span>(bufDescTable[i].file == file){
+<a name="l00141"></a>00141    <span class="comment">//Checks if dirty bit is true</span>
+<a name="l00142"></a>00142    <span class="keywordflow">if</span> (bufDescTable[i].dirty == <span class="keyword">true</span>){
+<a name="l00143"></a>00143     <span class="comment">//Flush page to disk</span>
+<a name="l00144"></a>00144     <span class="comment">//file-&gt;writePage(bufPool[0]); how to get this to work?</span>
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146     <span class="comment">//Reset dirty bit</span>
+<a name="l00147"></a>00147     bufDescTable[i].dirty = <span class="keyword">false</span>;
+<a name="l00148"></a>00148    }
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150     <span class="comment">//Remove page from hashtable</span>
+<a name="l00151"></a>00151     hashTable-&gt;<a class="code" href="classbadgerdb_1_1_buf_hash_tbl.html#a5739cc2b22c74d62e25c9d3d316144d8">remove</a>(file,bufDescTable[i].pageNo);
+<a name="l00152"></a>00152 
+<a name="l00153"></a>00153     <span class="comment">//Invoke clear() to clear page frame</span>
+<a name="l00154"></a>00154     bufDescTable[i].Clear();
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156   }
+<a name="l00157"></a>00157   <span class="comment">//else{continue;}</span>
+<a name="l00158"></a>00158  }
+<a name="l00159"></a>00159   <span class="keywordflow">catch</span>(<a class="code" href="classbadgerdb_1_1_bad_buffer_exception.html" title="An exception that is thrown when a buffer is found whose valid is false but other...">BadBufferException</a> e){}
+<a name="l00160"></a>00160   <span class="keywordflow">catch</span>(<a class="code" href="classbadgerdb_1_1_page_pinned_exception.html" title="An exception that is thrown when a page which is not expected to be pinned in the...">PagePinnedException</a> e){}
+<a name="l00161"></a>00161   }
+<a name="l00162"></a>00162 }
+<a name="l00163"></a>00163 
+<a name="l00164"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#ab9ae3b12aac55b119b5763e3de2a4d2b">00164</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#ab9ae3b12aac55b119b5763e3de2a4d2b">BufMgr::allocPage</a>(<a class="code" href="classbadgerdb_1_1_file.html" title="Class which represents a file in the filesystem containing database pages.">File</a>* file, <a class="code" href="namespacebadgerdb.html#a1f49e404293bf4240756b89b53b1587a" title="Identifier for a page in a file.">PageId</a> &amp;pageNo, <a class="code" href="classbadgerdb_1_1_page.html" title="Class which represents a fixed-size database page containing records.">Page</a>*&amp; page) 
+<a name="l00165"></a>00165 {
+<a name="l00166"></a>00166   <span class="comment">//Testing</span>
+<a name="l00167"></a>00167 }
+<a name="l00168"></a>00168 
+<a name="l00169"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#a870a80a0f0abcf3b640b913b46b64486">00169</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#a870a80a0f0abcf3b640b913b46b64486">BufMgr::disposePage</a>(<a class="code" href="classbadgerdb_1_1_file.html" title="Class which represents a file in the filesystem containing database pages.">File</a>* file, <span class="keyword">const</span> <a class="code" href="namespacebadgerdb.html#a1f49e404293bf4240756b89b53b1587a" title="Identifier for a page in a file.">PageId</a> PageNo)
+<a name="l00170"></a>00170 {
+<a name="l00171"></a>00171     
+<a name="l00172"></a>00172 }
+<a name="l00173"></a>00173 
+<a name="l00174"></a><a class="code" href="classbadgerdb_1_1_buf_mgr.html#a598b3112b8193af603f5bc97c478a671">00174</a> <span class="keywordtype">void</span> <a class="code" href="classbadgerdb_1_1_buf_mgr.html#a598b3112b8193af603f5bc97c478a671">BufMgr::printSelf</a>(<span class="keywordtype">void</span>) 
+<a name="l00175"></a>00175 {
+<a name="l00176"></a>00176   <a class="code" href="classbadgerdb_1_1_buf_desc.html" title="Class for maintaining information about buffer pool frames.">BufDesc</a>* tmpbuf;
+<a name="l00177"></a>00177   <span class="keywordtype">int</span> validFrames = 0;
+<a name="l00178"></a>00178   
+<a name="l00179"></a>00179   <span class="keywordflow">for</span> (std::uint32_t i = 0; i &lt; numBufs; i++)
+<a name="l00180"></a>00180   {
+<a name="l00181"></a>00181     tmpbuf = &amp;(bufDescTable[i]);
+<a name="l00182"></a>00182     std::cout &lt;&lt; <span class="stringliteral">&quot;FrameNo:&quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;
+<a name="l00183"></a>00183     tmpbuf-&gt;Print();
+<a name="l00184"></a>00184 
+<a name="l00185"></a>00185     <span class="keywordflow">if</span> (tmpbuf-&gt;valid == <span class="keyword">true</span>)
+<a name="l00186"></a>00186       validFrames++;
+<a name="l00187"></a>00187   }
+<a name="l00188"></a>00188 
+<a name="l00189"></a>00189   std::cout &lt;&lt; <span class="stringliteral">&quot;Total Number of Valid Frames:&quot;</span> &lt;&lt; validFrames &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+<a name="l00190"></a>00190 }
+<a name="l00191"></a>00191 
+<a name="l00192"></a>00192 }
 </pre></div></div>
 <!--- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -141,7 +242,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr size="1"/><address style="text-align: right;"><small>Generated on 10 Apr 2017 for BadgerDB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Apr 2017 for BadgerDB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
