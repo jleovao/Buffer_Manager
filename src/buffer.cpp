@@ -16,6 +16,13 @@
 
 namespace badgerdb { 
 
+/*
+ * Function Name: BufMgr
+ * Input: uint32
+ * Output: BufMgr Object
+ * Purpose: Constructor for BufMgr class
+ * Creates an array of BufDesc, an array of pages and a BufHashTable
+ */
 BufMgr::BufMgr(std::uint32_t bufs)
 	: numBufs(bufs) {
 	bufDescTable = new BufDesc[bufs];
@@ -34,16 +41,45 @@ BufMgr::BufMgr(std::uint32_t bufs)
   clockHand = bufs - 1;
 }
 
-
+/*
+ * Function Name: ~BufMgr
+ * Input: None
+ * Output: None
+ * Purpose: Destructor for BufMgr
+ * Flushes out all dirty pages from the bufPool
+ * then deallocates the buffer pool and the BufDesc Table
+ */
 BufMgr::~BufMgr() {
+  //Goes through bufDescTable and flushes out all pages with a dirty bit
+  for (FrameId i = 0; i < numBufs; i++)
+  {
+    if(bufDescTable[i].dirty == true){
+      flushFile(bufDescTable[i].file);
+    }
+  }
+  //Deallocate bufDescTable and bufPool
+  delete [] bufDescTable;
+  delete [] bufPool;
 }
 
-// Advance clock to next frame in the buffer pool
+/*
+ * Function Name: advanceClock
+ * Input: None
+ * Output: None
+ * Purpose: Advance clock to next frame in the buffer pool
+ * Uses modular math to logically make it like a clockHand
+ */
 void BufMgr::advanceClock()
 {
-    clockHand = (clockHand+1) % numBufs;    
+    clockHand = (clockHand+1) % numBufs;
 }
 
+/*
+ * Function Name: allocBuf
+ * Input: FrameId reference
+ * Output: None
+ * Purpose: Allocates a freem frame using the clock algorithm
+ */
 void BufMgr::allocBuf(FrameId & frame) 
 {
     bool pageFound = false;
@@ -96,7 +132,13 @@ void BufMgr::allocBuf(FrameId & frame)
     //}
 }
 
-	
+/*
+ * Function Name: readPage
+ * Input: File pointer, constant PageID and reference to a Page
+ * Output: None
+ * Purpose: Read a page from disk into the buffer pool
+ * or set appropriate ref bit and increment pinCnt
+ */
 void BufMgr::readPage(File* file, const PageId pageNo, Page*& page)
 {
   // First check whether the page is already in the buffer pool
@@ -132,7 +174,12 @@ void BufMgr::readPage(File* file, const PageId pageNo, Page*& page)
   page = &bufPool[clockHand];
 }
 
-
+/*
+ * Function Name: unPinPage
+ * Input: File pointer, constant PageID and constant bool
+ * Output: None
+ * Purpose: Decrement pinCnt of of the input and set the dirty bit
+ */
 void BufMgr::unPinPage(File* file, const PageId pageNo, const bool dirty)
 {
   //Is this necessary?
@@ -160,6 +207,13 @@ void BufMgr::unPinPage(File* file, const PageId pageNo, const bool dirty)
   catch(HashNotFoundException e){}
 }
 
+/*
+ * Function Name: flushFile
+ * Input: File pointer
+ * Output: None
+ * Purpose:Flushes all pages belonging to the file, remove the pages from the
+ * hashTable and clear the corresponding bufDescs
+ */
 void BufMgr::flushFile(const File* file) 
 {
   //Scan bufPool coorect way to scan bufPool?
@@ -190,11 +244,25 @@ void BufMgr::flushFile(const File* file)
   }
 }
 
+/*
+ * Function Name: allocPage
+ * Input: File pointer, page number and reference to a page
+ * Output: None
+ * Purpose:
+ */
 void BufMgr::allocPage(File* file, PageId &pageNo, Page*& page) 
 {
   //Testing
 }
 
+/*
+ * Function Name: disposePage
+ * Input: File pointer and page number
+ * Output: None
+ * Purpose: Deletes a page from file.
+ * If the page is in the buffer, clear page from buffer and remove
+ * from hashTable
+ */
 void BufMgr::disposePage(File* file, const PageId PageNo)
 {
     
