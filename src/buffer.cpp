@@ -107,12 +107,17 @@ void BufMgr::allocBuf(FrameId & frame)
              	    else {
              	        // Check if dirty bit is set
              	        if(bufDescTable[clockHand].dirty) {
-             	            //FlushFile(File * fileptr);
-             	            //bufDescTable[clockHand].Set(File * fileptr, PageID pageNum);
+                            // call writePage from file instead of flushFile
+                            bufDescTable[clockHand].file->writePage(bufPool[clockHand]);
+             	            //FlushFile(bufDescTable[clockHand].file);
+             	            // Call clear();
+             	            //bufDescTable[clockHand].Set(bufDescTable[clockHand].file, bufPool[clockHand]);
              	            pageFound = true;
              	        }
              	        else {
+                            // Call clear();
        	              	    //bufDescTable[clockHand].Set(File * fileptr, PageID pageNum);
+       	              	    //bufDescTable[clockHand].Set(bufDescTable[clockHand].file, bufPool[clockHand].pageNo);
     	                    pageFound = true;
     	                } 
     	            }
@@ -124,12 +129,9 @@ void BufMgr::allocBuf(FrameId & frame)
     	        pageFound = true;
     	    }
     	} // end while 
-    //if(numPinned >= numBufs) {
-    //    throw buffer_exceeded_exception("All buffer frames pinned!");
-    //}
-    //} catch(buffer_exceeded_exception e) {
-    
-    //}
+    if(numPinned >= numBufs) {
+        throw BufferExceededException();
+    }
 }
 
 /*
@@ -177,7 +179,7 @@ void BufMgr::readPage(File* file, const PageId pageNo, Page*& page)
 /*
  * Function Name: unPinPage
  * Input: File pointer, constant PageID and constant bool
- * Output: None
+ i* Output: None
  * Purpose: Decrement pinCnt of of the input and set the dirty bit
  */
 void BufMgr::unPinPage(File* file, const PageId pageNo, const bool dirty)
@@ -196,14 +198,13 @@ void BufMgr::unPinPage(File* file, const PageId pageNo, const bool dirty)
 
    bufDescTable[clockHand].pinCnt--; //do we need to lookup? Are we decrementing the right pinCnt?
 
-   if(bufDescTable[clockHand].dirty == true){
+   if(dirty == true){
     //are we checking if the param dirty == false or if bufDesc.dirty == false?
     //Which dirty are we updating and to what value?
-    bufDescTable[clockHand].dirty = false;
+    bufDescTable[clockHand].dirty = true;
    }
   }
 
-  catch(PageNotPinnedException e){}
   catch(HashNotFoundException e){}
 }
 
@@ -253,6 +254,8 @@ void BufMgr::flushFile(const File* file)
 void BufMgr::allocPage(File* file, PageId &pageNo, Page*& page) 
 {
   //Testing
+  //file->alocPage();
+  //Call Set()
 }
 
 /*
