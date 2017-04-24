@@ -84,7 +84,7 @@ void BufMgr::allocBuf(FrameId & frame)
 {
     bool pageFound = false;
     std::uint32_t numPinned = 0;
-   
+    // What about the frame in param??? 
     //try {
         while(!pageFound) {
 	    // Advance the clock to next frame
@@ -109,15 +109,12 @@ void BufMgr::allocBuf(FrameId & frame)
              	        if(bufDescTable[clockHand].dirty) {
                             // call writePage from file instead of flushFile
                             bufDescTable[clockHand].file->writePage(bufPool[clockHand]);
-             	            //FlushFile(bufDescTable[clockHand].file);
              	            // Call clear();
              	            bufDescTable[clockHand].Clear();
-             	            //bufDescTable[clockHand].Set(bufDescTable[clockHand].file, bufPool[clockHand]);
              	            pageFound = true;
              	        }
              	        else {
                             // Call clear();
-       	              	    //bufDescTable[clockHand].Set(File * fileptr, PageID pageNum);
     	                    bufDescTable[clockHand].Clear();
                             pageFound = true;
     	                } 
@@ -126,7 +123,6 @@ void BufMgr::allocBuf(FrameId & frame)
     	    }
     	    // Valid not set
     	    else {
-    	        //bufDescTable[clockHand].Set(File * filePtr, PageID pageNum);   
                 bufDescTable[clockHand].Clear();
     	        pageFound = true;
     	    }
@@ -186,7 +182,6 @@ void BufMgr::readPage(File* file, const PageId pageNo, Page*& page)
  */
 void BufMgr::unPinPage(File* file, const PageId pageNo, const bool dirty)
 {
-  //Is this necessary?
   FrameId tmp;
 
   try{
@@ -197,13 +192,13 @@ void BufMgr::unPinPage(File* file, const PageId pageNo, const bool dirty)
    if(bufDescTable[tmp].pinCnt == 0){
      throw PageNotPinnedException("PinCnt already 0",pageNo,tmp);
    }
-
    bufDescTable[tmp].pinCnt--; //do we need to lookup? Are we decrementing the right pinCnt?
-
+   
+   // This check is for the test cases
    if(dirty == true){
     //are we checking if the param dirty == false or if bufDesc.dirty == false?
     //Which dirty are we updating and to what value?
-    bufDescTable[clockHand].dirty = true;
+    bufDescTable[tmp].dirty = true;
    }
   }
 
@@ -221,14 +216,18 @@ void BufMgr::flushFile(const File* file)
 {
   //Scan bufPool coorect way to scan bufPool?
   for(unsigned int i = 0; i < numBufs; i++){
-  try{
   //checks if page corresponds to file
   if(bufDescTable[i].file == file){
    //Checks if dirty bit is true
+   if(bufDescTable[i].pinCnt > 0) {
+       throw PagePinnedException("Page is pinned", bufDescTable[i].pageNo, bufDescTable[i].frameNo);
+   }
+   
    if (bufDescTable[i].dirty == true){
     //Flush page to disk
     //file->writePage(bufPool[0]); how to get this to work?
-
+    bufDescTable[i].file->writePage(bufPool[bufDescTable[i].frameNo]);
+    
     //Reset dirty bit
     bufDescTable[i].dirty = false;
    }
@@ -240,11 +239,10 @@ void BufMgr::flushFile(const File* file)
     bufDescTable[i].Clear();
 
   }
-  //else{continue;}
- }
-  catch(BadBufferException e){}
-  catch(PagePinnedException e){}
+  else{
+      throw BadBufferException(bufDescTable[i].frameNo, bufDescTable[i].dirty, bufDescTable[i].valid, bufDescTable[i].refbit);
   }
+ }
 }
 
 /*
@@ -253,11 +251,25 @@ void BufMgr::flushFile(const File* file)
  * Output: None
  * Purpose:
  */
+
+// InvalidRecordException thrown during main
 void BufMgr::allocPage(File* file, PageId &pageNo, Page*& page) 
 {
-  //Testing
-  //file->alocPage();
-  //Call Set()
+  // Not sure what frameNo to use so I use 0 as a temp placeHolder, asked on Piazza
+  FrameId frameNo = 0;
+  // Allocate an empty page in the specified file which returns a newly allocated page
+  Page currentPage = file->allocatePage();
+  // Obtain a buffer pool frame
+  allocBuf(frameNo);
+  bufPool[frameNo] = currentPage;
+  // Entry is inserted into the hash table
+  hashTable->insert(file, currentPage.page_number(), frameNo);
+  //Call Set() on the frame
+  bufDescTable[frameNo].Set(file, currentPage.page_number()); 
+  // return both page number of newly allocated page to the caller via the pageNo param
+  // and a pointer to the buffer frame allocated for the page via page param
+  pageNo = currentPage.page_number();
+  page = &bufPool[frameNo];
 }
 
 /*
@@ -270,7 +282,19 @@ void BufMgr::allocPage(File* file, PageId &pageNo, Page*& page)
  */
 void BufMgr::disposePage(File* file, const PageId PageNo)
 {
-    
+    FrameId tmp;
+    // This method deletes a particular page from file.
+    try {
+        hashTable->lookup(file, PageNo, tmp);
+        // Make sure that if the page to be deleted is allocated to a frame in the buffer
+        // pool, that frame is freed and correspondingly entry from hash table is also
+        // removed
+        bufDescTable[tmp].Clear();
+        hashTable->remove(file, PageNo);
+    } catch(HashNotFoundException e) {}
+
+    // After checks, delete page from the file
+    file->deletePage(PageNo);
 }
 
 void BufMgr::printSelf(void) 
