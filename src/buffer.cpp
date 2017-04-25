@@ -60,6 +60,7 @@ BufMgr::~BufMgr() {
   //Deallocate bufDescTable and bufPool
   delete [] bufDescTable;
   delete [] bufPool;
+  delete [] hashTable;
 }
 
 /*
@@ -80,62 +81,65 @@ void BufMgr::advanceClock()
  * Output: None
  * Purpose: Allocates a freem frame using the clock algorithm
  */
-void BufMgr::allocBuf(FrameId & frame) 
+void BufMgr::allocBuf(FrameId & frame)
 {
-    bool pageFound = false;
-    std::uint32_t numPinned = 0;
-    // What about the frame in param??? 
-    //try {
-        while(!pageFound) {
-	    // Advance the clock to next frame
-	    advanceClock();
-	    
-       	    // check if valid is set
-       	    if(bufDescTable[clockHand].valid) {
-       	        // if valid check refbit and see if was recently referenced.
-       	        if(bufDescTable[clockHand].refbit) {
-       	            // Reset refbit
-       	            bufDescTable[clockHand].refbit = 0;
-       	            continue;
-       	        }
-       	        else {
-                    // check if page is pinned
-            	    if(bufDescTable[clockHand].pinCnt > 0) {
-            	        numPinned++;
-             	        continue;
-             	    }
-             	    else {
-                        // Allocated buffer frame has a valid page,
-                        // Remove entry from hash table
-                        hashTable->remove(bufDescTable[clockHand].file, bufDescTable[clockHand].pageNo); 
-             	        // Check if dirty bit is set
-             	        if(bufDescTable[clockHand].dirty) {
-                            // call writePage to flush file
-                            bufDescTable[clockHand].file->writePage(bufPool[clockHand]);
-             	            // Call clear() to Set page
-             	            bufDescTable[clockHand].Clear();
-             	            pageFound = true;
-             	        }
-             	        else {
-                            // Call clear();
-    	                    bufDescTable[clockHand].Clear();
-                            pageFound = true;
-    	                }
-                        // Page is valid, set frame
-                        frame = clockHand;
-    	            }
-    	        }
-    	    }
-    	    // Valid not set
-    	    else {
-                bufDescTable[clockHand].Clear();
-                frame = clockHand;
-    	        pageFound = true;
-    	    }
-        if(numPinned >= numBufs) {
-            throw BufferExceededException();
-        }
-    	} // end while 
+ bool pageFound = false;
+ std::uint32_t numPinned = 0;
+
+ while(!pageFound) {
+ // Advance the clock to next frame
+ advanceClock();
+
+ // check if valid is set
+ if(bufDescTable[clockHand].valid) {
+  // if valid check refbit and see if was recently referenced.
+  if(bufDescTable[clockHand].refbit) {
+  // Reset refbit
+  bufDescTable[clockHand].refbit = 0;
+  continue;
+  }
+
+  else {
+  // check if page is pinned
+  if(bufDescTable[clockHand].pinCnt > 0) {
+    numPinned++;
+    continue;
+  }
+  else {
+  // Allocated buffer frame has a valid page,
+  // Remove entry from hash table
+    hashTable->remove(bufDescTable[clockHand].file, bufDescTable[clockHand].pageNo); 
+    // Check if dirty bit is set
+    if(bufDescTable[clockHand].dirty) {
+    // call writePage to flush file
+    bufDescTable[clockHand].file->writePage(bufPool[clockHand]);
+    // Call clear() to Set page
+    bufDescTable[clockHand].Clear();
+    pageFound = true;
+    }
+    else {
+    // Call clear();
+    bufDescTable[clockHand].Clear();
+    pageFound = true;
+    }
+
+    // Page is valid, set frame
+    // could be //frame = clockHand;
+    frame = bufDescTable[clockHand].frameNo;
+    }
+   }
+  }
+ // Valid not set
+  else {
+   bufDescTable[clockHand].Clear();
+   //frame = clockHand; //could be correct?
+   frame = bufDescTable[clockHand].frameNo;
+   pageFound = true;
+   }
+   if(numPinned >= numBufs) {
+   throw BufferExceededException();
+  }
+ } // end while 
     //if(numPinned >= numBufs) {
     //    throw BufferExceededException();
     //}
@@ -274,7 +278,7 @@ void BufMgr::flushFile(const File* file)
 void BufMgr::allocPage(File* file, PageId &pageNo, Page*& page) 
 {
   // Not sure what frameNo to use so I use 0 as a temp placeHolder, asked on Piazza
-  FrameId frameNo = 0;
+  FrameId frameNo;
   // Allocate an empty page in the specified file which returns a newly allocated page
   Page currentPage = file->allocatePage();
   // Obtain a buffer pool frame
