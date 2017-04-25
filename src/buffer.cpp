@@ -105,11 +105,14 @@ void BufMgr::allocBuf(FrameId & frame)
              	        continue;
              	    }
              	    else {
+                        // Allocated buffer frame has a valid page,
+                        // Remove entry from hash table
+                        hashTable->remove(bufDescTable[clockHand].file, bufDescTable[clockHand].pageNo); 
              	        // Check if dirty bit is set
              	        if(bufDescTable[clockHand].dirty) {
-                            // call writePage from file instead of flushFile
+                            // call writePage to flush file
                             bufDescTable[clockHand].file->writePage(bufPool[clockHand]);
-             	            // Call clear();
+             	            // Call clear() to Set page
              	            bufDescTable[clockHand].Clear();
              	            pageFound = true;
              	        }
@@ -117,19 +120,25 @@ void BufMgr::allocBuf(FrameId & frame)
                             // Call clear();
     	                    bufDescTable[clockHand].Clear();
                             pageFound = true;
-    	                } 
+    	                }
+                        // Page is valid, set frame
+                        frame = clockHand;
     	            }
     	        }
     	    }
     	    // Valid not set
     	    else {
                 bufDescTable[clockHand].Clear();
+                frame = clockHand;
     	        pageFound = true;
     	    }
+        if(numPinned >= numBufs) {
+            throw BufferExceededException();
+        }
     	} // end while 
-    if(numPinned >= numBufs) {
-        throw BufferExceededException();
-    }
+    //if(numPinned >= numBufs) {
+    //    throw BufferExceededException();
+    //}
 }
 
 /*
@@ -142,36 +151,42 @@ void BufMgr::allocBuf(FrameId & frame)
 void BufMgr::readPage(File* file, const PageId pageNo, Page*& page)
 {
   // First check whether the page is already in the buffer pool
-  // are we suppose to get frameNo from clockHand index?
   FrameId tmp;
   try{
+   // Case 2: page is in the buffer pool
    hashTable->lookup(file, pageNo, tmp);
+   // Set the appropriate refbit
+   bufDescTable[tmp].refbit = true;
+   // Increment pin count for the page
+   bufDescTable[tmp].pinCnt++;
+   // return pointer to the frame containing the page via page param
+   page = &bufPool[tmp];
   }
 
   catch(HashNotFoundException e){
-  // Case 1: If page is not in the buffer pool
-  //Allocate buffer frame
-  BufMgr::allocBuf(tmp);
+      // Case 1: If page is not in the buffer pool
+      //Allocate buffer frame
+      allocBuf(tmp);
 
-  //Read page 
-  file->readPage(pageNo);
+      //Read page 
+      file->readPage(pageNo);
 
-  //Insert page into hashtable
-  hashTable->insert(file,pageNo,tmp);
+      //Insert page into hashtable
+      hashTable->insert(file,pageNo,tmp);
 
-  // invoke Set() on the frame to set it up properly
-  bufDescTable[tmp].Set(file,pageNo);
-  // Return a pointer to the frame containing the page via page param
-  page = &bufPool[tmp];
+      // invoke Set() on the frame to set it up properly
+      bufDescTable[tmp].Set(file,pageNo);
+      // Return a pointer to the frame containing the page via page param
+      page = &bufPool[tmp];
   }
 
   // Case 2: Page is in the buffer pool
   // Set the appropriate refbit
-  bufDescTable[tmp].refbit = true;
+  //bufDescTable[tmp].refbit = true;
   //Increment pin count for the page
-  bufDescTable[tmp].pinCnt++;
+  //bufDescTable[tmp].pinCnt++;
   // return pointer to the frame containing the page via page param
-  page = &bufPool[tmp];
+  //page = &bufPool[tmp];
 }
 
 /*
@@ -216,8 +231,8 @@ void BufMgr::flushFile(const File* file)
 {
   //Scan bufPool coorect way to scan bufPool?
   for(unsigned int i = 0; i < numBufs; i++){
-  //checks if page corresponds to file
-  if(bufDescTable[i].file == file){
+  //checks if page corresponds to file and is valid
+  if(bufDescTable[i].file == file && bufDescTable[i].valid == true){
    //Checks if dirty bit is true
    if(bufDescTable[i].pinCnt > 0) {
        throw PagePinnedException("Page is pinned", bufDescTable[i].pageNo, bufDescTable[i].frameNo);
@@ -249,7 +264,10 @@ void BufMgr::flushFile(const File* file)
  * Function Name: allocPage
  * Input: File pointer, page number and reference to a page
  * Output: None
- * Purpose:
+ * Purpose: Allocates an empty page and returns both the page number of 
+ *          the newly allocated page to the caller via the pageNo param
+ *          and a pointer to the buffer frame allocated for the page via
+ *          page param
  */
 
 // InvalidRecordException thrown during main
