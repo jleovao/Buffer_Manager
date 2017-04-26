@@ -60,7 +60,6 @@ BufMgr::~BufMgr() {
   //Deallocate bufDescTable and bufPool
   delete [] bufDescTable;
   delete [] bufPool;
-  delete [] hashTable;
 }
 
 /*
@@ -86,37 +85,48 @@ void BufMgr::allocBuf(FrameId & frame)
  bool pageFound = false;
  std::uint32_t numPinned = 0;
 
- while(!pageFound) {
+ while(pageFound == false) {
  // Advance the clock to next frame
  advanceClock();
+ if(numPinned >= numBufs) {
+   throw BufferExceededException();
+ }
 
  // check if valid is set
- if(bufDescTable[clockHand].valid) {
+ if(bufDescTable[clockHand].valid == true) {
   // if valid check refbit and see if was recently referenced.
-  if(bufDescTable[clockHand].refbit) {
+  if(bufDescTable[clockHand].refbit == true) {
   // Reset refbit
-  bufDescTable[clockHand].refbit = 0;
+  bufDescTable[clockHand].refbit = false;
   continue;
   }
 
+  // corresponds to 2nd if statement if refbit is not set
   else {
-  // check if page is pinned
-  if(bufDescTable[clockHand].pinCnt > 0) {
+  // check if page is pinned. reloop if it is
+   if(bufDescTable[clockHand].pinCnt > 0) {
     numPinned++;
     continue;
-  }
-  else {
-  // Allocated buffer frame has a valid page,
-  // Remove entry from hash table
-    hashTable->remove(bufDescTable[clockHand].file, bufDescTable[clockHand].pageNo); 
+   }
+
+   // if page is not pinned
+   else {
+   // Allocated buffer frame has a valid page,
+   // Remove entry from hash table
+    hashTable->remove(bufDescTable[clockHand].file, bufDescTable[clockHand].pageNo);
+
+
     // Check if dirty bit is set
     if(bufDescTable[clockHand].dirty) {
     // call writePage to flush file
     bufDescTable[clockHand].file->writePage(bufPool[clockHand]);
+    //flushFile(bufDescTable[clockHand].file);
     // Call clear() to Set page
     bufDescTable[clockHand].Clear();
     pageFound = true;
     }
+
+
     else {
     // Call clear();
     bufDescTable[clockHand].Clear();
@@ -129,6 +139,8 @@ void BufMgr::allocBuf(FrameId & frame)
     }
    }
   }
+
+ // corresponds to first if statement
  // Valid not set
   else {
    bufDescTable[clockHand].Clear();
@@ -136,13 +148,7 @@ void BufMgr::allocBuf(FrameId & frame)
    frame = bufDescTable[clockHand].frameNo;
    pageFound = true;
    }
-   if(numPinned >= numBufs) {
-   throw BufferExceededException();
-  }
- } // end while 
-    //if(numPinned >= numBufs) {
-    //    throw BufferExceededException();
-    //}
+ }
 }
 
 /*
@@ -173,7 +179,7 @@ void BufMgr::readPage(File* file, const PageId pageNo, Page*& page)
       allocBuf(tmp);
 
       //Read page 
-      file->readPage(pageNo);
+      bufPool[tmp] = file->readPage(pageNo);
 
       //Insert page into hashtable
       hashTable->insert(file,pageNo,tmp);
@@ -287,7 +293,7 @@ void BufMgr::allocPage(File* file, PageId &pageNo, Page*& page)
   // Entry is inserted into the hash table
   hashTable->insert(file, currentPage.page_number(), frameNo);
   //Call Set() on the frame
-  bufDescTable[frameNo].Set(file, currentPage.page_number()); 
+  bufDescTable[frameNo].Set(file, currentPage.page_number());
   // return both page number of newly allocated page to the caller via the pageNo param
   // and a pointer to the buffer frame allocated for the page via page param
   pageNo = currentPage.page_number();
