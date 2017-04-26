@@ -7,7 +7,7 @@
 
 /**
  * Authors: Anthony Quintero-Quiroga & Joseph Leovao
- * PID: A10845368 & A
+ * PID: A10845368 & A12478957
  * Date: 04/26/2017
  * Filename: buffer.cpp
  * Purpose of File: Defines functions described in buffer.h
@@ -73,7 +73,7 @@ BufMgr::~BufMgr() {
   //Deallocate bufDescTable, bufPool and hashTable
   delete [] bufDescTable;
   delete [] bufPool;
-  //delete [] hashTable;
+  delete hashTable;
 }
 
 /*
